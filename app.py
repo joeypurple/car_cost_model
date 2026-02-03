@@ -22,8 +22,8 @@ oil_brand = st.sidebar.selectbox("油车品牌", oil_brands, index=oil_brands.in
 ev_brand = st.sidebar.selectbox("电车品牌", ev_brands, index=ev_brands.index(cm.inputs['电车品牌']) if cm.inputs['电车品牌'] in ev_brands else 0)
 
 # 价格与里程等基本参数
-oil_price = st.sidebar.number_input("油车新车价", value=cm.inputs['油车新车价'], step=1000)
-ev_price = st.sidebar.number_input("电车新车价", value=cm.inputs['电车新车价'], step=1000)
+oil_price = st.sidebar.number_input("油车新车价", value=float(cm.inputs['油车新车价']), step=1000)
+ev_price = st.sidebar.number_input("电车新车价", value=float(cm.inputs['电车新车价']), step=1000)
 
 油价 = st.sidebar.number_input("油价 (元/L)", value=cm.inputs['油价'])
 家充价 = st.sidebar.number_input("家充电价 (元/kWh)", value=cm.inputs['家充电价'])
