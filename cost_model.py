@@ -129,7 +129,7 @@ def get_a4avant_market_price(mileage):
     return y1 + slope * (mileage - x1)
 
 # ===================== 现金流计算函数 =====================
-def calc_cashflow(brand, new_price, start_year, end_year, is_ev, override_annual_mileage=None, oil_purchase_mileage=None):
+def calc_cashflow(brand, new_price, start_year, end_year, is_ev, override_annual_mileage=None, oil_purchase_mileage=None, used_purchase_price=0, used_sell_price=0):
     """
     计算现金流
     override_annual_mileage: 如果提供，将覆盖默认的年里程（用于敏感性分析）
@@ -177,11 +177,12 @@ def calc_cashflow(brand, new_price, start_year, end_year, is_ev, override_annual
 
     # ===== 实际购入价格 =====
     if start_year == 1:
-        purchase_price = new_price
+        default_purchase_price = new_price
+        purchase_price = default_purchase_price
     else:
         if not is_ev and oil_purchase_mileage is not None and brand == '奥迪 A4 Avant':
             # A4 Avant：使用实际二手成交里程-价格曲线估算购入价，独立于新车价
-            purchase_price = get_a4avant_market_price(oil_purchase_mileage)
+            default_purchase_price = get_a4avant_market_price(oil_purchase_mileage)
         elif not is_ev and oil_purchase_mileage is not None:
             # 油车：根据购入时的实际里程数计算残值率
             mileage_units = int(oil_purchase_mileage / 10000)
@@ -194,6 +195,12 @@ def calc_cashflow(brand, new_price, start_year, end_year, is_ev, override_annual
                 is_ev,
                 actual_annual_mileage
             )
+
+    if start_year != 1 and 'default_purchase_price' in locals():
+        purchase_price = default_purchase_price
+
+    if start_year != 1 and used_purchase_price != 0:
+        purchase_price = used_purchase_price
 
     rows = []
 
@@ -267,7 +274,7 @@ def calc_cashflow(brand, new_price, start_year, end_year, is_ev, override_annual
 
         # ---- 卖车 ----
         if year == end_year and in_use:
-            sell = car_value
+            sell = used_sell_price if used_sell_price != 0 else car_value
         else:
             sell = 0
 

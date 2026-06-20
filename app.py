@@ -39,11 +39,15 @@ vehicle1_price = st.sidebar.number_input(
     value=float(cm.inputs['油车新车价']) if vehicle1_type == '油' else float(cm.inputs['电车新车价']),
     step=1000.0
 )
+vehicle1_used_purchase_price = st.sidebar.number_input("车辆1二手买车价", value=0.0, step=1000.0)
+vehicle1_used_sell_price = st.sidebar.number_input("车辆1卖车价", value=0.0, step=1000.0)
 vehicle2_price = st.sidebar.number_input(
     "车辆2新车价",
     value=float(cm.inputs['电车新车价']) if vehicle2_type == '电' else float(cm.inputs['油车新车价']),
     step=1000.0
 )
+vehicle2_used_purchase_price = st.sidebar.number_input("车辆2二手买车价", value=0.0, step=1000.0)
+vehicle2_used_sell_price = st.sidebar.number_input("车辆2卖车价", value=0.0, step=1000.0)
 
 vehicle1_start_year = st.sidebar.number_input(
     "车辆1起始年",
@@ -138,7 +142,9 @@ if st.sidebar.button("运行模型"):
         int(vehicle1_start_year),
         int(vehicle1_end_year),
         vehicle1_type == '电',
-        oil_purchase_mileage=vehicle1_purchase_mileage
+        oil_purchase_mileage=vehicle1_purchase_mileage,
+        used_purchase_price=float(vehicle1_used_purchase_price),
+        used_sell_price=float(vehicle1_used_sell_price)
     )
 
     vehicle2_cf = cm.calc_cashflow(
@@ -147,7 +153,9 @@ if st.sidebar.button("运行模型"):
         int(vehicle2_start_year),
         int(vehicle2_end_year),
         vehicle2_type == '电',
-        oil_purchase_mileage=vehicle2_purchase_mileage
+        oil_purchase_mileage=vehicle2_purchase_mileage,
+        used_purchase_price=float(vehicle2_used_purchase_price),
+        used_sell_price=float(vehicle2_used_sell_price)
     )
 
     st.subheader('车辆1 现金流')
